@@ -33,7 +33,7 @@ public class Automatic {
     public int calWeight(int i, int j) {
         int[] directions = {Constants.TRANSVERSE_LINE, Constants.VERTICAL_LINE, Constants.SLASH, Constants.BACK_SLASH};
         //⚫⚫⚫⚫⚫ 最高
-
+        return 0;
     }
 
     //四个方向十个
