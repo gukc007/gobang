@@ -13,9 +13,9 @@ public class Main {
     public static void main(String[] args) {
         int[][] chessboard = new int[Constants.HEIGHT][Constants.WIDTH];
         chessboard[5][5] = Constants.BLACK;
-//        chessboard[4][4] = Constants.WHITE;
-//        chessboard[2][5] = Constants.BLACK;
-//        chessboard[1][5] = Constants.WHITE;
+
+        chessboard[6][4] = chessboard[6][6] = chessboard[5][6] = chessboard[4][5] = chessboard[2][4] = Constants.WHITE;
+        chessboard[5][4] = chessboard[4][4] = chessboard[3][4] = chessboard[1][1] = chessboard[1][4] = Constants.BLACK;
         print(chessboard);
 
         Automatic automatic = new Automatic(chessboard);

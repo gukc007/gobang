@@ -51,10 +51,10 @@ public class Automatic {
                     if (chessboard[i][j] == Constants.EMPTY) {
                         chessboard[i][j] = chessColor;
 
+                        if (i > 3) {
+                        }
+
                         TreeDto dto2 = deep(depth + 1, chessColor, otherChessColor);
-//                        if (dto2.getValue() >= 8) {
-//                            System.out.print("");
-//                        }
                         if (dto2.getValue() > dto1.getValue()) {
                             dto1.setI(i);
                             dto1.setJ(j);
@@ -143,7 +143,7 @@ public class Automatic {
         for (int i1 = 0; i1 < directions.size(); i1++) {
             String direction = directions.get(i1);
             if (direction.contains(target)) {
-                return 100;
+                return 10000;
             }
         }
 
@@ -152,7 +152,7 @@ public class Automatic {
         for (int i1 = 0; i1 < directions.size(); i1++) {
             String direction = directions.get(i1);
             if (direction.contains(target)) {
-                return 90;
+                return 4000;
             }
         }
 
@@ -176,7 +176,7 @@ public class Automatic {
         }
         if (countDeadFour >= 2) {
             //和活4一样效果
-            return 90;
+            return 4000;
         }
 
         //_⚫⚫⚫_  _⚫_⚫⚫_  _⚫⚫_⚫_  活三
@@ -197,11 +197,11 @@ public class Automatic {
         }
         if (countDeadFour > 0 || countLifeThree > 0) {
             if (countDeadFour > 0 && countLifeThree > 0) {
-                return 80;
+                return 1800;
             } else if (countLifeThree >= 2) {
-                return 70;
+                return 800;
             }
-            weight  = 30;
+            weight  = 300;
         }
 
         //_⚫_⚫_ _⚫⚫__ __⚫⚫_ 活二
@@ -239,7 +239,7 @@ public class Automatic {
             }
         }
 
-        weight = weight + (countLifeTwo + countDeadThree) * 4;
+        weight = weight + (countLifeTwo + countDeadThree) * 100;
 
         return weight;
     }
