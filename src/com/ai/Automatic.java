@@ -59,15 +59,16 @@ public class Automatic {
                             dto1.setI(i);
                             dto1.setJ(j);
                             dto1.setValue(dto2.getValue());
-                        } else if (dto2.getValue() == dto1.getValue()) {
-                            int value1 = calWeight(dto1.getI(), dto1.getJ(), chessColor);
-                            int value2 = calWeight(dto2.getI(), dto2.getJ(), chessColor);
-                            if (value1 < value2) {
-                                dto1.setI(i);
-                                dto1.setJ(j);
-                                dto1.setValue(dto2.getValue());
-                            }
                         }
+//                        else if (dto2.getValue() == dto1.getValue()) {
+//                            int value1 = calWeight(dto1.getI(), dto1.getJ(), chessColor);
+//                            int value2 = calWeight(dto2.getI(), dto2.getJ(), chessColor);
+//                            if (value1 < value2) {
+//                                dto1.setI(i);
+//                                dto1.setJ(j);
+//                                dto1.setValue(dto2.getValue());
+//                            }
+//                        }
                         chessboard[i][j] = Constants.EMPTY;
                     }
                 }
@@ -94,33 +95,24 @@ public class Automatic {
         }
     }
 
-    //获取盘上最大的一点
+    //获取盘上两者最大的一点 互减
     private TreeDto getMaxWeight(int chessColor, int otherChessColor) {
+        TreeDto dto = getMaxWeight(chessColor);
+
+        TreeDto otherDto = getMaxWeight(otherChessColor);
+        //互减
+        dto.setValue(dto.getValue() - otherDto.getValue());
+        return dto;
+    }
+
+    //获取盘上最大的一点
+    private TreeDto getMaxWeight(int chessColor) {
         TreeDto dto = new TreeDto(Integer.MIN_VALUE);
 //        int maxValue = -1;
         for (int i = 0; i < chessboard.length; i++) {
             for (int j = 0; j < chessboard[i].length; j++) {
                 if (chessboard[i][j] == Constants.EMPTY) {
                     int value = calWeight(i, j, chessColor);
-                    if (value > dto.getValue()) {
-                        dto.setI(i);
-                        dto.setJ(j);
-                        dto.setValue(value);
-                    }
-                }
-            }
-        }
-
-        for (int i = 0; i < chessboard.length; i++) {
-            for (int j = 0; j < chessboard[i].length; j++) {
-                if (chessboard[i][j] == Constants.EMPTY) {
-                    int value = calWeight(i, j, otherChessColor);
-                    if (value >= 90) {
-                        dto.setI(i);
-                        dto.setJ(j);
-                        dto.setValue(-1);
-                        return dto;
-                    }
                     if (value > dto.getValue()) {
                         dto.setI(i);
                         dto.setJ(j);
