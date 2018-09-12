@@ -51,8 +51,6 @@ public class Automatic {
                     if (chessboard[i][j] == Constants.EMPTY) {
                         chessboard[i][j] = chessColor;
 
-                        if (i > 3) {
-                        }
 
                         TreeDto dto2 = deep(depth + 1, chessColor, otherChessColor);
                         if (dto2.getValue() > dto1.getValue()) {

@@ -1,6 +1,7 @@
 package com.main;
 
 import com.ai.Automatic;
+import com.ai.Automatic2;
 import com.common.Constants;
 
 import java.util.Scanner;
@@ -14,14 +15,19 @@ public class Main {
         int[][] chessboard = new int[Constants.HEIGHT][Constants.WIDTH];
         chessboard[5][5] = Constants.BLACK;
 
-        chessboard[6][4] = chessboard[6][6] = chessboard[5][6] = chessboard[4][5] = chessboard[2][4] = Constants.WHITE;
-        chessboard[5][4] = chessboard[4][4] = chessboard[3][4] = chessboard[1][1] = chessboard[1][4] = Constants.BLACK;
+//        chessboard[5][4] = chessboard[4][5] = chessboard[3][5] = Constants.BLACK;
+//        chessboard[6][5] = chessboard[6][3] = Constants.WHITE;
+
+//        chessboard[6][4] = chessboard[6][6] = chessboard[5][6] = chessboard[4][5] = chessboard[2][4] = chessboard[3][3] = Constants.WHITE;
+//        chessboard[5][4] = chessboard[4][4] = chessboard[3][4] = chessboard[1][1] = chessboard[1][4] = chessboard[2][2] = Constants.BLACK;
         print(chessboard);
 
-        Automatic automatic = new Automatic(chessboard);
+        Automatic2 automatic2 = new Automatic2(chessboard);
+
+//        Automatic automatic = new Automatic(chessboard);
         Scanner sc = new Scanner(System.in);
 //        Automatic automatic = new Automatic(chessboard);
-        while(true) {
+        while (true) {
 
             int i = sc.nextInt();
             int j = sc.nextInt();
@@ -32,13 +38,10 @@ public class Main {
                 chessboard[i][j] = Constants.WHITE;
             }
             print(chessboard);
-            automatic.chess(Constants.BLACK);
+            automatic2.chess();
             print(chessboard);
         }
 
-//        print(values);
-
-//        automatic.calWeight();
     }
 
     private static void print(int[][] chessboard) {
