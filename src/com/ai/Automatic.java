@@ -17,7 +17,7 @@ public class Automatic {
 
     public Automatic(int[][] chessboard) {
         this.chessboard = chessboard;
-        initChessboard();
+//        initChessboard();
     }
 
     //初始化
@@ -29,16 +29,129 @@ public class Automatic {
         }
     }
 
+    public void chess(int chessColor) {
+
+        int otherChessColor = chessColor != Constants.BLACK ? Constants.BLACK : Constants.WHITE;
+        TreeDto dto = deep(1, chessColor, otherChessColor);
+
+        chessboard[dto.getI()][dto.getJ()] = chessColor;
+    }
+
+    //深度搜索 先测试3层
+    private TreeDto deep(int depth, int chessColor, int otherChessColor) {
+        if (depth > 2) {
+            //最好是考虑奇数层
+            return getMaxWeight(chessColor, otherChessColor);
+        }
+        if (depth % 2 == 1) {
+            //奇数层为最大值
+            TreeDto dto1 = new TreeDto(Integer.MIN_VALUE);
+            for (int i = 0; i < chessboard.length; i++) {
+                for (int j = 0; j < chessboard[0].length; j++) {
+                    if (chessboard[i][j] == Constants.EMPTY) {
+                        chessboard[i][j] = chessColor;
+
+                        TreeDto dto2 = deep(depth + 1, chessColor, otherChessColor);
+//                        if (dto2.getValue() >= 8) {
+//                            System.out.print("");
+//                        }
+                        if (dto2.getValue() > dto1.getValue()) {
+                            dto1.setI(i);
+                            dto1.setJ(j);
+                            dto1.setValue(dto2.getValue());
+                        } else if (dto2.getValue() == dto1.getValue()) {
+                            int value1 = calWeight(dto1.getI(), dto1.getJ(), chessColor);
+                            int value2 = calWeight(dto2.getI(), dto2.getJ(), chessColor);
+                            if (value1 < value2) {
+                                dto1.setI(i);
+                                dto1.setJ(j);
+                                dto1.setValue(dto2.getValue());
+                            }
+                        }
+                        chessboard[i][j] = Constants.EMPTY;
+                    }
+                }
+            }
+            return dto1;
+        } else {
+            //偶数层为最小值
+            TreeDto dto = new TreeDto(Integer.MAX_VALUE);
+            for (int i = 0; i < chessboard.length; i++) {
+                for (int j = 0; j < chessboard[0].length; j++) {
+                    if (chessboard[i][j] == Constants.EMPTY) {
+                        chessboard[i][j] = otherChessColor;
+                        int value = deep(depth + 1, chessColor, otherChessColor).getValue();
+                        if (value < dto.getValue()) {
+                            dto.setValue(value);
+                            dto.setI(i);
+                            dto.setJ(j);
+                        }
+                        chessboard[i][j] = Constants.EMPTY;
+                    }
+                }
+            }
+            return dto;
+        }
+    }
+
+    //获取盘上最大的一点
+    private TreeDto getMaxWeight(int chessColor, int otherChessColor) {
+        TreeDto dto = new TreeDto(Integer.MIN_VALUE);
+//        int maxValue = -1;
+        for (int i = 0; i < chessboard.length; i++) {
+            for (int j = 0; j < chessboard[i].length; j++) {
+                if (chessboard[i][j] == Constants.EMPTY) {
+                    int value = calWeight(i, j, chessColor);
+                    if (value > dto.getValue()) {
+                        dto.setI(i);
+                        dto.setJ(j);
+                        dto.setValue(value);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < chessboard.length; i++) {
+            for (int j = 0; j < chessboard[i].length; j++) {
+                if (chessboard[i][j] == Constants.EMPTY) {
+                    int value = calWeight(i, j, otherChessColor);
+                    if (value >= 90) {
+                        dto.setI(i);
+                        dto.setJ(j);
+                        dto.setValue(-1);
+                        return dto;
+                    }
+                    if (value > dto.getValue()) {
+                        dto.setI(i);
+                        dto.setJ(j);
+                        dto.setValue(value);
+                    }
+                }
+            }
+        }
+        return dto;
+    }
+
     //计算点的权值
     public int calWeight(int i, int j, int chessColor) {
+        int t = chessboard[i][j];
+        chessboard[i][j] = chessColor;
+        int weight = calWeight(i, j);
+        chessboard[i][j] = t;
+        return weight;
+    }
+
+    //计算点的权值
+    private int calWeight(int i, int j) {
         int weight = 0;
+        int chessColor = chessboard[i][j];
         List<String> directions = directionCal(i, j);
         //⚫⚫⚫⚫⚫ 最高
         String target = "" + chessColor + chessColor + chessColor + chessColor + chessColor;
         for (int i1 = 0; i1 < directions.size(); i1++) {
             String direction = directions.get(i1);
             if (direction.contains(target)) {
-                return 1000;
+                return 100;
             }
         }
 
@@ -47,7 +160,7 @@ public class Automatic {
         for (int i1 = 0; i1 < directions.size(); i1++) {
             String direction = directions.get(i1);
             if (direction.contains(target)) {
-                return 900;
+                return 90;
             }
         }
 
@@ -71,7 +184,7 @@ public class Automatic {
         }
         if (countDeadFour >= 2) {
             //和活4一样效果
-            return 900;
+            return 90;
         }
 
         //_⚫⚫⚫_  _⚫_⚫⚫_  _⚫⚫_⚫_  活三
@@ -92,11 +205,11 @@ public class Automatic {
         }
         if (countDeadFour > 0 || countLifeThree > 0) {
             if (countDeadFour > 0 && countLifeThree > 0) {
-                return 800;
+                return 80;
             } else if (countLifeThree >= 2) {
-                return 700;
+                return 70;
             }
-            weight  = 200;
+            weight  = 30;
         }
 
         //_⚫_⚫_ _⚫⚫__ __⚫⚫_ 活二
@@ -134,7 +247,7 @@ public class Automatic {
             }
         }
 
-        weight = weight + (countLifeTwo + countDeadThree) * 10;
+        weight = weight + (countLifeTwo + countDeadThree) * 4;
 
         return weight;
     }
@@ -169,6 +282,7 @@ public class Automatic {
             str += chessboard[ic][jc];
             ic--;
         }
+        directions.add(str);
         str = "";
         // Constants.BACK_SLASH:反斜，左斜
         ic = i - (j - leftUpMax);
@@ -179,5 +293,43 @@ public class Automatic {
         directions.add(str);
 
         return directions;
+    }
+
+    //用来存储 i j 和 value值
+    public class TreeDto {
+        private int i;
+        private int j;
+        private int value;
+
+        public TreeDto() {
+        }
+
+        public TreeDto(int value) {
+            this.value = value;
+        }
+
+        public int getI() {
+            return i;
+        }
+
+        public void setI(int i) {
+            this.i = i;
+        }
+
+        public int getJ() {
+            return j;
+        }
+
+        public void setJ(int j) {
+            this.j = j;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
     }
 }
