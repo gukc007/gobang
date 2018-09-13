@@ -23,12 +23,12 @@ public class Automatic2 {
     }
 
     public void chess() {
-        TreeDto dto = deep(1);
+        TreeDto dto = deep(1, Integer.MAX_VALUE);
         chessboard[dto.getI()][dto.getJ()] = Constants.BLACK;
     }
 
     //博弈树
-    private TreeDto deep(int depth) {
+    private TreeDto deep(int depth, int parentValue) {
         if (depth > 2) {
             //最好是考虑奇数层
             int value = calAllWeight();
@@ -41,14 +41,17 @@ public class Automatic2 {
                 for (int j = 0; j < chessboard[0].length; j++) {
                     if (chessboard[i][j] == Constants.EMPTY) {
                         chessboard[i][j] = Constants.BLACK;
-
-                        int value = deep(depth + 1).getValue();
+                        int value = deep(depth + 1, dto.getValue()).getValue();
+                        chessboard[i][j] = Constants.EMPTY;
                         if (value > dto.getValue()) {
                             dto.setI(i);
                             dto.setJ(j);
                             dto.setValue(value);
+                            if (dto.getValue() >= parentValue) {
+                                //剪枝
+                                return dto;
+                            }
                         }
-                        chessboard[i][j] = Constants.EMPTY;
                     }
                 }
             }
@@ -60,13 +63,17 @@ public class Automatic2 {
                 for (int j = 0; j < chessboard[0].length; j++) {
                     if (chessboard[i][j] == Constants.EMPTY) {
                         chessboard[i][j] = Constants.WHITE;
-                        int value = deep(depth + 1).getValue();
+                        int value = deep(depth + 1, dto.getValue()).getValue();
+                        chessboard[i][j] = Constants.EMPTY;
                         if (value < dto.getValue()) {
                             dto.setValue(value);
                             dto.setI(i);
                             dto.setJ(j);
+                            if (dto.getValue() <= parentValue) {
+                                //剪枝
+                                return dto;
+                            }
                         }
-                        chessboard[i][j] = Constants.EMPTY;
                     }
                 }
             }
