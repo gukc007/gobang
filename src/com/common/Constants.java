@@ -4,8 +4,8 @@ package com.common;
  * Created by admin on 2018/9/11.
  */
 public class Constants {
-    public static final int WIDTH = 10;
-    public static final int HEIGHT = 10;
+    public static final int WIDTH = 15;
+    public static final int HEIGHT = 15;
 
     public static final int EMPTY = 0;
     public static final int BLACK = 1;

@@ -3,6 +3,7 @@ package com.ai;
 import com.algorithm.KMPAlgorithm;
 import com.common.Constants;
 import com.common.Score;
+import com.dto.TreeDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,24 +23,55 @@ public class Automatic2 {
     }
 
     public void chess() {
-        int maxValue = Integer.MIN_VALUE;
-        int maxi = 0;
-        int maxj = 0;
-        for (int i = 0; i < chessboard.length; i++) {
-            for (int j = 0; j < chessboard[0].length; j++) {
-                if (chessboard[i][j] == Constants.EMPTY) {
-                    chessboard[i][j] = Constants.BLACK;
-                    int value = calAllWeight();
-                    if (maxValue < value) {
-                        maxValue = value;
-                        maxi = i;
-                        maxj = j;
+        TreeDto dto = deep(1);
+        chessboard[dto.getI()][dto.getJ()] = Constants.BLACK;
+    }
+
+    //博弈树
+    private TreeDto deep(int depth) {
+        if (depth > 2) {
+            //最好是考虑奇数层
+            int value = calAllWeight();
+            return new TreeDto(value);
+        }
+        if (depth % 2 == 1) {
+            //奇数层为最大值
+            TreeDto dto = new TreeDto(Integer.MIN_VALUE);
+            for (int i = 0; i < chessboard.length; i++) {
+                for (int j = 0; j < chessboard[0].length; j++) {
+                    if (chessboard[i][j] == Constants.EMPTY) {
+                        chessboard[i][j] = Constants.BLACK;
+
+                        int value = deep(depth + 1).getValue();
+                        if (value > dto.getValue()) {
+                            dto.setI(i);
+                            dto.setJ(j);
+                            dto.setValue(value);
+                        }
+                        chessboard[i][j] = Constants.EMPTY;
                     }
-                    chessboard[i][j] = Constants.EMPTY;
                 }
             }
+            return dto;
+        } else {
+            //偶数层为最小值
+            TreeDto dto = new TreeDto(Integer.MAX_VALUE);
+            for (int i = 0; i < chessboard.length; i++) {
+                for (int j = 0; j < chessboard[0].length; j++) {
+                    if (chessboard[i][j] == Constants.EMPTY) {
+                        chessboard[i][j] = Constants.WHITE;
+                        int value = deep(depth + 1).getValue();
+                        if (value < dto.getValue()) {
+                            dto.setValue(value);
+                            dto.setI(i);
+                            dto.setJ(j);
+                        }
+                        chessboard[i][j] = Constants.EMPTY;
+                    }
+                }
+            }
+            return dto;
         }
-        chessboard[maxi][maxj] = Constants.BLACK;
     }
 
     //计算整个棋盘的权值 （每行每列 每次判断六个点）ai先后手都属于黑色 电脑盘面得分减去玩家的盘面得分
@@ -50,7 +82,10 @@ public class Automatic2 {
         for (String chessStr : chessStrs) {
             for (Score.ChessType chessType : Score.chessTypes) {
                 int times = KMPAlgorithm.cal(chessStr, chessType.getType());
-                    total += chessType.getScore() * times;
+                total += chessType.getScore() * times;
+//                if (chessStr.contains(chessType.getType())) {
+//                    total += chessType.getScore();
+//                }
             }
         }
         return total;

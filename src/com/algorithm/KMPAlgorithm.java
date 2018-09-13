@@ -10,11 +10,6 @@ import java.util.Scanner;
  */
 public class KMPAlgorithm {
 
-    private static final String RED = "red";
-    private static final String BLUE = "blue";
-    private static final String YELLOW = "yellow";
-    private static final String WHITE = "white";
-
     public static int cal(String str, String subString) {
 
         int[] next = getNextValue(subString);

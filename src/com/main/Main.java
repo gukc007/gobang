@@ -13,7 +13,7 @@ public class Main {
 
     public static void main(String[] args) {
         int[][] chessboard = new int[Constants.HEIGHT][Constants.WIDTH];
-        chessboard[5][5] = Constants.BLACK;
+        chessboard[chessboard.length / 2][chessboard[0].length / 2] = Constants.BLACK;
 
 //        chessboard[5][4] = chessboard[4][5] = chessboard[3][5] = Constants.BLACK;
 //        chessboard[6][5] = chessboard[6][3] = Constants.WHITE;
@@ -24,7 +24,7 @@ public class Main {
 
         Automatic2 automatic2 = new Automatic2(chessboard);
 
-//        Automatic automatic = new Automatic(chessboard);
+        Automatic automatic = new Automatic(chessboard);
         Scanner sc = new Scanner(System.in);
 //        Automatic automatic = new Automatic(chessboard);
         while (true) {
@@ -38,15 +38,23 @@ public class Main {
                 chessboard[i][j] = Constants.WHITE;
             }
             print(chessboard);
+            long time1 = System.currentTimeMillis();
             automatic2.chess();
+//            automatic.chess(Constants.BLACK);
+            long time2 = System.currentTimeMillis();
             print(chessboard);
+            System.out.println("消耗时间:" + (time2 - time1));
         }
 
     }
 
     private static void print(int[][] chessboard) {
         for (int i = 0; i < chessboard.length; i++) {
-            System.out.print(" " + i + " ");
+            if (i < 10) {
+                System.out.print(" " + i + " ");
+            } else {
+                System.out.print(" " + i);
+            }
         }
 //        ⚫⚪
         System.out.println();
@@ -59,12 +67,6 @@ public class Main {
                 } else if (chessboard[i][j] == Constants.EMPTY) {
 //                    System.out.print("" + i + j + " ");
                     System.out.print(" . ");
-                } else {
-                    if (chessboard[i][j] < 10) {
-                        System.out.print(chessboard[i][j] + "  ");
-                    } else {
-                        System.out.print(chessboard[i][j] + " ");
-                    }
                 }
             }
             System.out.print(" " + i);

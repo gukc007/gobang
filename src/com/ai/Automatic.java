@@ -1,6 +1,7 @@
 package com.ai;
 
 import com.common.Constants;
+import com.dto.TreeDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Automatic {
 
         int otherChessColor = chessColor != Constants.BLACK ? Constants.BLACK : Constants.WHITE;
         TreeDto dto = deep(1, chessColor, otherChessColor);
+//        TreeDto dto = getMaxWeight(chessColor, otherChessColor);
 
         chessboard[dto.getI()][dto.getJ()] = chessColor;
     }
@@ -283,43 +285,5 @@ public class Automatic {
         directions.add(str);
 
         return directions;
-    }
-
-    //用来存储 i j 和 value值
-    public class TreeDto {
-        private int i;
-        private int j;
-        private int value;
-
-        public TreeDto() {
-        }
-
-        public TreeDto(int value) {
-            this.value = value;
-        }
-
-        public int getI() {
-            return i;
-        }
-
-        public void setI(int i) {
-            this.i = i;
-        }
-
-        public int getJ() {
-            return j;
-        }
-
-        public void setJ(int j) {
-            this.j = j;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
-        }
     }
 }
