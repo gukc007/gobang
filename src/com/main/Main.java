@@ -3,7 +3,9 @@ package com.main;
 import com.ai.Automatic;
 import com.ai.Automatic2;
 import com.common.Constants;
+import com.version.MainFrame;
 
+import javax.swing.*;
 import java.util.Scanner;
 
 /**
@@ -11,9 +13,25 @@ import java.util.Scanner;
  */
 public class Main {
 
+    private static int flag = 0;
+
     public static void main(String[] args) {
+
+        int a = 0;
+        if (a == 0) {
+            MainFrame mainFrame = new MainFrame();
+            return;
+        }
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("是否先手，先为1否为0");
+        flag = sc.nextInt();
         int[][] chessboard = new int[Constants.HEIGHT][Constants.WIDTH];
-        chessboard[chessboard.length / 2][chessboard[0].length / 2] = Constants.BLACK;
+//        if (flag == 0) {
+            chessboard[chessboard.length / 2][chessboard[0].length / 2] = Constants.BLACK;
+        if (flag == 1) {
+            chessboard[chessboard.length / 2 - 1][chessboard[0].length / 2 - 1] = Constants.WHITE;
+        }
 
 //        chessboard[5][4] = chessboard[4][5] = chessboard[3][5] = Constants.BLACK;
 //        chessboard[6][5] = chessboard[6][3] = Constants.WHITE;
@@ -25,7 +43,6 @@ public class Main {
         Automatic2 automatic2 = new Automatic2(chessboard);
 
         Automatic automatic = new Automatic(chessboard);
-        Scanner sc = new Scanner(System.in);
 //        Automatic automatic = new Automatic(chessboard);
         while (true) {
 
@@ -61,9 +78,17 @@ public class Main {
         for (int i = 0; i < chessboard.length; i++) {
             for (int j = 0; j < chessboard.length; j++) {
                 if (chessboard[i][j] == Constants.BLACK) {
-                    System.out.print("⬜ ");
+                    if (flag == 0) {
+                        System.out.print("⬜ ");
+                    } else {
+                        System.out.print("⬛ ");
+                    }
                 } else if (chessboard[i][j] == Constants.WHITE) {
-                    System.out.print("⬛ ");
+                    if (flag == 0) {
+                        System.out.print("⬛ ");
+                    } else {
+                        System.out.print("⬜ ");
+                    }
                 } else if (chessboard[i][j] == Constants.EMPTY) {
 //                    System.out.print("" + i + j + " ");
                     System.out.print(" . ");
