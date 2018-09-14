@@ -22,9 +22,10 @@ public class Automatic2 {
         this.chessboard = chessboard;
     }
 
-    public void chess() {
+    public TreeDto chess() {
         TreeDto dto = deep(1, Integer.MAX_VALUE);
         chessboard[dto.getI()][dto.getJ()] = Constants.BLACK;
+        return dto;
     }
 
     //博弈树
