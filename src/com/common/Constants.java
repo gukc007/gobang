@@ -15,4 +15,7 @@ public class Constants {
     public static final int VERTICAL_LINE = 1; //竖线
     public static final int SLASH = 2; //斜，右斜
     public static final int BACK_SLASH = 3;  //反斜，左斜
+
+
+    public static final int INDEX = 37; //棋盘宽度
 }

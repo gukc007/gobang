@@ -2,6 +2,8 @@ package com.version;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 /**
  * Created by admin on 2018/9/13.
@@ -10,6 +12,8 @@ public class MainFrame extends JFrame{
 
     private MainJpanel mainJpanel;
 
+    private MainMouseListener mainMouseListener;
+
     public MainFrame() {
         initCom();
         initFrame();
@@ -17,14 +21,9 @@ public class MainFrame extends JFrame{
 
     private void initCom() {
         mainJpanel = new MainJpanel();
+        mainMouseListener = new MainMouseListener(mainJpanel);
 
-//        jPanel.setSize(100, 100);
-//        mainJpanel.setBounds(50, 50, 610, 610);
-//        jPanel.setPreferredSize(new Dimension(100, 100));
-
-//        jPanel.setLayout();
-//        mainJpanel.setBackground(new Color(242, 225, 179));
-//        mainJpanel.
+        mainJpanel.addMouseListener(mainMouseListener);
 
         this.add(mainJpanel);
     }
