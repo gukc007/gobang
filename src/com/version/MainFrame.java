@@ -77,4 +77,28 @@ public class MainFrame extends JFrame{
     public void setMainMouseListener(MainJpanel.MainMouseListener mainMouseListener) {
         this.mainMouseListener = mainMouseListener;
     }
+
+    public Main getMain() {
+        return main;
+    }
+
+    public void setMain(Main main) {
+        this.main = main;
+    }
+
+    public JPanel getTipJpanel() {
+        return tipJpanel;
+    }
+
+    public void setTipJpanel(JPanel tipJpanel) {
+        this.tipJpanel = tipJpanel;
+    }
+
+    public JLabel getTipJLabel() {
+        return tipJLabel;
+    }
+
+    public void setTipJLabel(JLabel tipJLabel) {
+        this.tipJLabel = tipJLabel;
+    }
 }

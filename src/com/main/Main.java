@@ -26,6 +26,8 @@ public class Main {
 
     private MainJpanel mainJpanel;
 
+    private MainFrame mainFrame;
+
     public static void main(String[] args) {
 
         Main main = new Main();
@@ -34,7 +36,7 @@ public class Main {
 
     //为了避免静态方法
     public void begin() {
-        MainFrame mainFrame = new MainFrame(this);
+        mainFrame = new MainFrame(this);
         mainJpanel = mainFrame.getMainJpanel();
 
         try {
@@ -76,6 +78,7 @@ public class Main {
 //            automatic.chess(Constants.BLACK);
         mainJpanel.printChess(dto.getI(), dto.getJ());
         long time2 = System.currentTimeMillis();
+        mainFrame.getTipJLabel().setText("电脑决策完毕,耗时:" + (1.0 * (time2 - time1)) / 1000 + "秒");
         System.out.println("消耗时间:" + (time2 - time1));
     }
 
@@ -85,7 +88,9 @@ public class Main {
             //玩家下棋
             chessboard[i][j] = Constants.WHITE;
         }
-        System.out.print("电脑决策中,");
+        System.out.print("电脑决策中....");
+        mainFrame.getTipJLabel().setText("电脑决策中....");
+        //多线程
         ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
         singleThreadExecutor.execute(this::aiChess);
     }
