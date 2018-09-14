@@ -58,7 +58,7 @@ public class Automatic2 {
                 for (int j = 0; j < chessboard[0].length; j++) {
                     if (chessboard[i][j] == Constants.EMPTY) {
                         chessboard[i][j] = Constants.BLACK;
-                        int value = handleLineBeforeDeep(i, j, depth, dto.getValue()).getValue();
+                        int value = handleLineBeforeDeep(i, j, depth, dto.getValue());
                         chessboard[i][j] = Constants.EMPTY;
                         if (value > dto.getValue()) {
                             dto.setI(i);
@@ -80,7 +80,7 @@ public class Automatic2 {
                 for (int j = 0; j < chessboard[0].length; j++) {
                     if (chessboard[i][j] == Constants.EMPTY) {
                         chessboard[i][j] = Constants.WHITE;
-                        int value = handleLineBeforeDeep(i, j, depth, dto.getValue()).getValue();
+                        int value = handleLineBeforeDeep(i, j, depth, dto.getValue());
                         chessboard[i][j] = Constants.EMPTY;
                         if (value < dto.getValue()) {
                             dto.setValue(value);
@@ -99,7 +99,10 @@ public class Automatic2 {
     }
 
     // 在搜索前要进行线的值变换
-    private TreeDto handleLineBeforeDeep(int i, int j, int depth, int dtoValue) {
+    private int handleLineBeforeDeep(int i, int j, int depth, int dtoValue) {
+
+        int value = 0;
+
         int transverseLine = transverseLines[i];
         int verticalLine = verticalLines[j];
         int slash = slashs[i - j + chessboard[0].length];
@@ -113,10 +116,14 @@ public class Automatic2 {
         int newLines = changePointLines(i, j);
 //        totalLines += newLines;
 
-        //dtoValue用来剪枝
-        TreeDto dto = deep(depth + 1, dtoValue);
-
-        totalLines -= newLines;
+        if (newLines == Integer.MAX_VALUE || newLines == Integer.MIN_VALUE) {
+            value = newLines;
+        } else {
+            //dtoValue用来剪枝
+            value = deep(depth + 1, dtoValue).getValue();
+            //totalLines的变化是写在 changePointLines的最尾的，所以如果返回的是Intger最大值最小值，则totalLines没有变化
+            totalLines -= newLines;
+        }
 
         totalLines += transverseLine;
         totalLines += verticalLine;
@@ -128,7 +135,7 @@ public class Automatic2 {
         slashs[i - j + chessboard[0].length] = slash;
         backSlashs[i + j] = backSlash;
 
-        return dto;
+        return value;
     }
 
     //获取该点上的分数
@@ -141,6 +148,9 @@ public class Automatic2 {
             transverseLine += chessboard[i][k];
         }
         transverseLines[i] = getLineValue(transverseLine);
+        if (transverseLines[i] == Integer.MAX_VALUE || transverseLines[i] == Integer.MIN_VALUE) {
+            return transverseLines[i];
+        }
         value += transverseLines[i];
 
         //竖线
@@ -149,6 +159,9 @@ public class Automatic2 {
             verticalLine += chessboard[k][j];
         }
         verticalLines[j] = getLineValue(verticalLine);
+        if (verticalLines[i] == Integer.MAX_VALUE || verticalLines[i] == Integer.MIN_VALUE) {
+            return verticalLines[i];
+        }
         value += verticalLines[j];
 
         //斜线
@@ -169,6 +182,9 @@ public class Automatic2 {
         }
         if (slash.length() >= 5) {
             slashs[i - j + chessboard[0].length] = getLineValue(slash);
+            if (slashs[i - j + chessboard[0].length] == Integer.MAX_VALUE || slashs[i - j + chessboard[0].length] == Integer.MIN_VALUE) {
+                return slashs[i - j + chessboard[0].length];
+            }
             value += slashs[i - j + chessboard[0].length];
         }
 
@@ -190,6 +206,9 @@ public class Automatic2 {
         }
         if (backSlash.length() >= 5) {
             backSlashs[i + j] = getLineValue(backSlash);
+            if (backSlashs[i + j] == Integer.MAX_VALUE || backSlashs[i + j] == Integer.MIN_VALUE) {
+                return backSlashs[i + j];
+            }
             value += backSlashs[i + j];
         }
 
@@ -202,7 +221,17 @@ public class Automatic2 {
         int value = 0;
         for (Score.ChessType chessType : Score.chessTypes) {
             int times = KMPAlgorithm.cal(chessLine, chessType.getType());
-            value += chessType.getScore() * times;
+            if (times > 0) {
+                if (chessType.getScore() == Constants.BLACK_FIVE_VALUE) {
+                    //黑五连直接返回最大值
+                    return Integer.MAX_VALUE;
+                }
+                if (chessType.getScore() == Constants.WHITE_FIVE_VALUE) {
+                    //白五连直接返回最小值
+                    return Integer.MIN_VALUE;
+                }
+                value += chessType.getScore() * times;
+            }
 //                if (chessStr.contains(chessType.getType())) {
 //                    total += chessType.getScore();
 //                }

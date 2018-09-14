@@ -16,13 +16,13 @@ public class Score {
         int b = Constants.BLACK;
         int w = Constants.WHITE;
         //黑五连
-        chessTypes.add(new ChessType(b, b, b, b, b, 100000000));
+        chessTypes.add(new ChessType(b, b, b, b, b, Constants.BLACK_FIVE_VALUE));
 //        chessTypes.add(new ChessType(b, b, b, b, b, e, 1000000));
 //        chessTypes.add(new ChessType(b, b, b, b, b, w, 1000000));
 //        chessTypes.add(new ChessType(w, b, b, b, b, b, 1000000));
 
         //白五连
-        chessTypes.add(new ChessType(w, w, w, w, w, -100000000));
+        chessTypes.add(new ChessType(w, w, w, w, w, Constants.WHITE_FIVE_VALUE));
 //        chessTypes.add(new ChessType(w, w, w, w, w, e, -1000000));
 //        chessTypes.add(new ChessType(b, w, w, w, w, w, -1000000));
 //        chessTypes.add(new ChessType(w, w, w, w, w, b, -1000000));

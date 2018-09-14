@@ -18,4 +18,7 @@ public class Constants {
 
 
     public static final int INDEX = 37; //棋盘宽度
+
+    public static final int BLACK_FIVE_VALUE = 100000000;//黑五星连珠的分数
+    public static final int WHITE_FIVE_VALUE = -100000000;//白五星连珠的分数
 }
