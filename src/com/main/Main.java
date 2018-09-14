@@ -46,10 +46,13 @@ public class Main {
         }
 
         chessboard = new int[Constants.HEIGHT][Constants.WIDTH];
+
+        automatic2 = new Automatic2(chessboard);
         if (flag == 0) {
             int i = chessboard.length / 2;
             int j = chessboard[0].length / 2;
-            chessboard[i][j] = Constants.BLACK;
+            //因为要改变线的值
+            automatic2.chessChangeLineValue(i, j, Constants.BLACK);
             mainJpanel.printChess(i, j);
         } else if (flag == 1) {
             int i = chessboard.length / 2 - 1;
@@ -64,8 +67,6 @@ public class Main {
 //        chessboard[6][4] = chessboard[6][6] = chessboard[5][6] = chessboard[4][5] = chessboard[2][4] = chessboard[3][3] = Constants.WHITE;
 //        chessboard[5][4] = chessboard[4][4] = chessboard[3][4] = chessboard[1][1] = chessboard[1][4] = chessboard[2][2] = Constants.BLACK;
 
-
-        automatic2 = new Automatic2(chessboard);
 
 //        Automatic automatic = new Automatic(chessboard);
 //        Automatic automatic = new Automatic(chessboard);
@@ -86,13 +87,13 @@ public class Main {
     public void changeChessboard(int i, int j) {
         if (chessboard[i][j] == Constants.EMPTY) {
             //玩家下棋
-            chessboard[i][j] = Constants.WHITE;
+            automatic2.chessChangeLineValue(i, j, Constants.WHITE);
+            System.out.print("电脑决策中....");
+            mainFrame.getTipJLabel().setText("电脑决策中....");
+            //多线程
+            ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+            singleThreadExecutor.execute(this::aiChess);
         }
-        System.out.print("电脑决策中....");
-        mainFrame.getTipJLabel().setText("电脑决策中....");
-        //多线程
-        ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
-        singleThreadExecutor.execute(this::aiChess);
     }
 
     //检查下棋是否合法

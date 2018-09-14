@@ -11,6 +11,9 @@ public class Constants {
     public static final int BLACK = 1;
     public static final int WHITE = 2;
 
+    public static final int UNUSEFUL = 0;
+    public static final int USEFUL = 1;
+
     public static final int TRANSVERSE_LINE = 0; //横线
     public static final int VERTICAL_LINE = 1; //竖线
     public static final int SLASH = 2; //斜，右斜

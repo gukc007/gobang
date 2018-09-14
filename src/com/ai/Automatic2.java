@@ -14,6 +14,7 @@ import java.util.List;
 public class Automatic2 {
 
     private int[][] chessboard;
+    private int[][] usefulRange; //有效范围，一般认为不超过原棋子两格
 
     private int [] transverseLines; //横线
     private int [] verticalLines; //竖线
@@ -30,6 +31,7 @@ public class Automatic2 {
         verticalLines = new int[chessboard[0].length];  // j
         slashs = new int[chessboard.length + chessboard[0].length];       // i - j + (chessboard[0].length)
         backSlashs = new int[chessboard.length + chessboard[0].length];  // i + j
+        usefulRange = new int[chessboard.length][chessboard[0].length];
     }
 
     public TreeDto chess() {
@@ -41,6 +43,9 @@ public class Automatic2 {
     //会改变线条保存的值
     public int chessChangeLineValue(int i, int j, int chessColor) {
         chessboard[i][j] = chessColor;
+        //将该点周围2格包括2格内的范围纳入有价值范围
+        changeUsefulChangePoint(i, j);
+        //改变当前行的值
         return changePointLines(i, j);
     }
 
@@ -56,7 +61,7 @@ public class Automatic2 {
             TreeDto dto = new TreeDto(Integer.MIN_VALUE);
             for (int i = 0; i < chessboard.length; i++) {
                 for (int j = 0; j < chessboard[0].length; j++) {
-                    if (chessboard[i][j] == Constants.EMPTY) {
+                    if (chessboard[i][j] == Constants.EMPTY && usefulRange[i][j] == Constants.USEFUL) {
                         chessboard[i][j] = Constants.BLACK;
                         int value = handleLineBeforeDeep(i, j, depth, dto.getValue());
                         chessboard[i][j] = Constants.EMPTY;
@@ -78,7 +83,7 @@ public class Automatic2 {
             TreeDto dto = new TreeDto(Integer.MAX_VALUE);
             for (int i = 0; i < chessboard.length; i++) {
                 for (int j = 0; j < chessboard[0].length; j++) {
-                    if (chessboard[i][j] == Constants.EMPTY) {
+                    if (chessboard[i][j] == Constants.EMPTY && usefulRange[i][j] == Constants.USEFUL) {
                         chessboard[i][j] = Constants.WHITE;
                         int value = handleLineBeforeDeep(i, j, depth, dto.getValue());
                         chessboard[i][j] = Constants.EMPTY;
@@ -115,6 +120,7 @@ public class Automatic2 {
 
         int newLines = changePointLines(i, j);
 //        totalLines += newLines;
+        List<IJDto> usefulChangePoints = changeUsefulChangePoint(i, j);
 
         if (newLines == Integer.MAX_VALUE || newLines == Integer.MIN_VALUE) {
             value = newLines;
@@ -123,6 +129,10 @@ public class Automatic2 {
             value = deep(depth + 1, dtoValue).getValue();
             //totalLines的变化是写在 changePointLines的最尾的，所以如果返回的是Intger最大值最小值，则totalLines没有变化
             totalLines -= newLines;
+        }
+
+        for (IJDto point : usefulChangePoints) {
+            usefulRange[point.getI()][point.getJ()] = Constants.UNUSEFUL;
         }
 
         totalLines += transverseLine;
@@ -237,6 +247,38 @@ public class Automatic2 {
 //                }
         }
         return value;
+    }
+
+    //将改点周围2格以内的范围扫描,将不可用的标记下来 改为可用
+    private List<IJDto> changeUsefulChangePoint(int i, int j) {
+        //       ⚫⚫⚫⚫⚫
+        //       ⚫⚫⚫⚫⚫
+        //       ⚫⚫⚪⚫⚫
+        //       ⚫⚫⚫⚫⚫
+        //       ⚫⚫⚫⚫⚫
+        int i1;
+        int j1;
+        if (i < 2) {
+            i1 = 0;
+        } else {
+            i1 = i - 2;
+        }
+        if (j < 2) {
+            j1 = 0;
+        } else {
+            j1 = j - 2;
+        }
+        List<IJDto> ijDtos = new ArrayList<>();
+        for (int k = i1; k < usefulRange.length && k <= i + 2; k++) {
+            for (int l = j1; l < usefulRange[0].length && l <= j + 2; l++) {
+                //将无用的改为可用的 并记录
+                if (usefulRange[k][l] == Constants.UNUSEFUL) {
+                    ijDtos.add(new IJDto(k, l));
+                    usefulRange[k][l] = Constants.USEFUL;
+                }
+            }
+        }
+        return ijDtos;
     }
 
     //计算整个棋盘的权值 （每行每列 每次判断六个点）ai先后手都属于黑色 电脑盘面得分减去玩家的盘面得分
@@ -360,4 +402,32 @@ public class Automatic2 {
 ////        backSlashs[i + j] = backSlash;
 //    }
 
+    public static class IJDto {
+        private int i;
+        private int j;
+
+        public IJDto() {
+        }
+
+        public IJDto(int i, int j) {
+            this.i = i;
+            this.j = j;
+        }
+
+        public int getI() {
+            return i;
+        }
+
+        public void setI(int i) {
+            this.i = i;
+        }
+
+        public int getJ() {
+            return j;
+        }
+
+        public void setJ(int j) {
+            this.j = j;
+        }
+    }
 }
